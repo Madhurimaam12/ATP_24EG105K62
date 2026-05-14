@@ -1,0 +1,44 @@
+*
+{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+table{
+    border: 0px solid rgb(66, 170, 173);
+    margin: auto;
+    text-align: center;
+    margin-top: 50px;
+    border-collapse: collapse;
+    padding-bottom: 20px;
+}   
+th,tr,td{
+    border: 0px solid white;
+    border-collapse: collapse;
+    padding: 10px;
+}
+.main{
+    background-color:rgb(21, 140, 140);
+}
+.sback,.yback{
+    background-color: aliceblue;
+}
+.rback,.vback,.header{
+    background-color:rgb(188, 228, 228);
+}
+img{
+    width: 150px;
+    border-radius: 50%;
+}
+.sachin{
+    border-radius: 200px;
+}
+.virat{
+    border-radius: 200px;
+}
+.yuvraj{
+    border-radius: 200px;
+}
+.rohit{
+    border-radius: 200px;
+}

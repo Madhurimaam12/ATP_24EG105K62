@@ -1,0 +1,21 @@
+body{
+    width:900px;
+}
+.parent{
+    display: flex;
+    text-align: center;
+    padding:30px;
+}
+
+.emp{
+    padding: 10px;
+    margin:10px;
+    box-shadow: 0px 0px 20px blue;
+    flex-direction:column;
+    
+}
+img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
