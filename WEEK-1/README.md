@@ -1,3 +1,4 @@
+WEEK-1 : BASIC JAVA CONCEPTS
 This folder contains JavaScript programs that help in learning the basic concepts of programming. Each file focuses on a specific task.
 
 BigOfTwoNum.js     : Finds which number is bigger between two numbers.
