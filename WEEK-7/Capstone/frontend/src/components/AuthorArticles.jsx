@@ -1,88 +1,113 @@
-import { useEffect, useState } from "react";
-import api from "../api/axiosClient";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../store/authStore";
+import exp from "express";
+import { config } from "dotenv";
+import mongoose from "mongoose";
+import path from "path";
+import { fileURLToPath } from "url";
+import { userApp } from "./APIs/UserAPI.js";
+import { authorApp } from "./APIs/AuthorAPI.js";
+import { adminApp } from "./APIs/AdminAPI.js";
+import { commonApp } from "./APIs/CommonAPI.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
-import {
-  articleCardClass,
-  articleTitle,
-  articleExcerpt,
-  articleMeta,
-  ghostBtn,
-  loadingClass,
-  errorClass,
-  emptyStateClass,
-  articleStatusActive,
-  articleStatusDeleted,
-} from "../styles/common";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-function AuthorArticles() {
-  const navigate = useNavigate();
-  const user = useAuth((state) => state.currentUser);
+// Load env variables
+config({ path: path.resolve(__dirname, "../.env") });
 
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+// Create express app
+const app = exp();
 
-  useEffect(() => {
-    if (!user) return;
+// CORS
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174", 
+      "http://localhost:5175",
+      "https://your-frontend.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 
-    const getAuthorArticles = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get("/author-api/articles");
-        if (res.status === 200) {
-          setArticles(res.data.payload);
-        }
-      } catch (err) {
-        setError(err.response?.data?.error || "Failed to fetch articles");
-      } finally {
-        setLoading(false);
-      }
-    };
+// Cookie parser
+app.use(cookieParser());
 
-    getAuthorArticles();
-  }, [user]);
+// Body parser
+app.use(exp.json());
 
-  const openArticle = (article) => {
-    navigate(`/article/${article._id}`, { state: article });
-  };
+// Routes
+app.use("/user-api", userApp);
+app.use("/author-api", authorApp);
+app.use("/admin-api", adminApp);
+app.use("/api/common", commonApp);
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      dateStyle: "medium",
+// Connect DB
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DB_URL);
+
+    console.log("DB server connected");
+
+    const port = process.env.PORT || 5000;
+
+    app.listen(port, () => {
+      console.log(`Server listening on port ${port}`);
     });
-  };
 
-  if (loading) return <p className={loadingClass}>Loading articles...</p>;
-  if (error) return <p className={errorClass}>{error}</p>;
+  } catch (err) {
+    console.log("Error in DB connect:", err);
+    process.exit(1);
+  }
+};
 
-  if (articles.length === 0) {
-    return <div className={emptyStateClass}>You haven't published any articles yet.</div>;
+connectDB();
+
+// Invalid path handler
+app.use((req, res) => {
+  res.status(404).json({
+    message: `Path ${req.url} is invalid`,
+  });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.log("Error:", err);
+
+  if (err.name === "ValidationError") {
+    return res.status(400).json({
+      message: "Validation Error",
+      error: err.message,
+    });
   }
 
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {articles.map((article) => (
-        <div key={article._id} className={`${articleCardClass} relative flex flex-col`}>
-          <span className={article.isArticleActive ? articleStatusActive : articleStatusDeleted}>
-            {article.isArticleActive ? "ACTIVE" : "DELETED"}
-          </span>
+  if (err.name === "CastError") {
+    return res.status(400).json({
+      message: "Cast Error",
+      error: err.message,
+    });
+  }
 
-          <div className="flex flex-col gap-2">
-            <p className={articleMeta}>{article.category}</p>
-            <p className={articleTitle}>{article.title}</p>
-            <p className={articleExcerpt}>{article.content.slice(0, 60)}...</p>
-          </div>
+  const errCode =
+    err.code ?? err.cause?.code ?? err.errorResponse?.code;
 
-          <button className={`${ghostBtn} mt-auto pt-4`} onClick={() => openArticle(article)}>
-            Read Article →
-          </button>
-        </div>
-      ))}
-    </div>
-  );
-}
+  const keyValue =
+    err.keyValue ??
+    err.cause?.keyValue ??
+    err.errorResponse?.keyValue;
 
-export default AuthorArticles;
+  if (errCode === 11000) {
+    const field = Object.keys(keyValue)[0];
+    const value = keyValue[field];
+
+    return res.status(409).json({
+      message: `${field} "${value}" already exists`,
+    });
+  }
+
+  res.status(500).json({
+    message: "Server side error",
+  });
+});
