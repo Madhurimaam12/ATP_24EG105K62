@@ -14,7 +14,7 @@ import {
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import api from "../api/axiosClient";
+import { commonApi } from "../api/axiosClient";
 
 function Register() {
   const {
@@ -44,7 +44,7 @@ function Register() {
       setLoading(true);
       setApiError(null);
 
-      const res = await api.post("/user-api/register", formData, {
+      const res = await commonApi.post("/users", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
