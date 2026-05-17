@@ -11,7 +11,7 @@ function Home() {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const res = await api.get("/user-api/articles");
+        const res = await api.get("/api/common/public-articles");
         const allArticles = res.data.payload || [];
         setArticles(allArticles.slice(1));
         setFeaturedArticle(allArticles[0]);
