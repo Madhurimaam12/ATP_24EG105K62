@@ -1,25 +1,33 @@
 import { useAuth } from "../store/authStore";
 import { Navigate } from "react-router-dom";
-import {toast} from "react-hot-toast";
+import { toast } from "react-hot-toast";
+import { useEffect, useRef } from "react";
 
 function ProtectedRoute({ children, allowedRoles }) {
-  //get user login status from store
-  const { loading, currentUser, isAuthenticated} = useAuth();
-  //loading state
+  const { loading, currentUser, isAuthenticated } = useAuth();
+  const hasShownToast = useRef(false);
+  
+  useEffect(() => {
+    if (!hasShownToast.current) {
+      if (!isAuthenticated) {
+        toast.error("Redirecting to Login");
+        hasShownToast.current = true;
+      } else if (allowedRoles && !allowedRoles.includes(currentUser?.role)) {
+        toast.error("You don't have permission to access this page");
+        hasShownToast.current = true;
+      }
+    }
+  }, [isAuthenticated, currentUser?.role, allowedRoles]);
+  
   if (loading) {
     return <p>Loading...</p>;
   }
-  //if user not loggedin
+  
   if (!isAuthenticated) {
-    toast.error("Redirecting to Login")
-    //redirect to Login
     return <Navigate to="/login" replace />;
   }
 
-  //check roles
   if (allowedRoles && !allowedRoles.includes(currentUser?.role)) {
-   
-    //redirect to Login
     return <Navigate to="/unauthorized" replace state={{ redirectTo: "/" }} />;
   }
 
