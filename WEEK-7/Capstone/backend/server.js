@@ -26,7 +26,7 @@ app.use(
       "http://localhost:5173",
       "http://localhost:5174", 
       "http://localhost:5175",
-      "https://your-frontend.vercel.app",
+      "https://atp-24-eg-105-k62-eight.vercel.app", 
     ],
     credentials: true,
   })
