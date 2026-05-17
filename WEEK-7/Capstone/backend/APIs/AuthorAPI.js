@@ -77,6 +77,6 @@ authorApp.patch("/articles", verifyToken("AUTHOR"), async (req, res) => {
 
   articleOfDB.isArticleActive = isArticleActive;
   await articleOfDB.save();
-  //SEND RES
+  //Send Res
   res.status(200).json({ message: "Artcile modified", payload: articleOfDB });
 });
