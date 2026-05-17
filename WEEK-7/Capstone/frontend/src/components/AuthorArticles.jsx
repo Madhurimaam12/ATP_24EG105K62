@@ -1,113 +1,105 @@
-import exp from "express";
-import { config } from "dotenv";
-import mongoose from "mongoose";
-import path from "path";
-import { fileURLToPath } from "url";
-import { userApp } from "./APIs/UserAPI.js";
-import { authorApp } from "./APIs/AuthorAPI.js";
-import { adminApp } from "./APIs/AdminAPI.js";
-import { commonApp } from "./APIs/CommonAPI.js";
-import cookieParser from "cookie-parser";
-import cors from "cors";
+import { useEffect, useState } from "react";
+import { authorApi } from "../api/axiosClient";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../store/authStore";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+function AuthorArticles() {
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-// Load env variables
-config({ path: path.resolve(__dirname, "../.env") });
+  useEffect(() => {
+    if (!currentUser) return;
+    fetchArticles();
+  }, [currentUser]);
 
-// Create express app
-const app = exp();
+  const fetchArticles = async () => {
+    try {
+      setLoading(true);
+      const response = await authorApi.get("/articles");
+      if (response.status === 200) {
+        setArticles(response.data.payload);
+      }
+    } catch (err) {
+      console.error("Error fetching articles:", err);
+      setError(err.response?.data?.message || "Failed to fetch articles");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-// CORS
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174", 
-      "http://localhost:5175",
-      "https://your-frontend.vercel.app",
-    ],
-    credentials: true,
-  })
-);
-
-// Cookie parser
-app.use(cookieParser());
-
-// Body parser
-app.use(exp.json());
-
-// Routes
-app.use("/user-api", userApp);
-app.use("/author-api", authorApp);
-app.use("/admin-api", adminApp);
-app.use("/api/common", commonApp);
-
-// Connect DB
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.DB_URL);
-
-    console.log("DB server connected");
-
-    const port = process.env.PORT || 5000;
-
-    app.listen(port, () => {
-      console.log(`Server listening on port ${port}`);
-    });
-
-  } catch (err) {
-    console.log("Error in DB connect:", err);
-    process.exit(1);
-  }
-};
-
-connectDB();
-
-// Invalid path handler
-app.use((req, res) => {
-  res.status(404).json({
-    message: `Path ${req.url} is invalid`,
-  });
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.log("Error:", err);
-
-  if (err.name === "ValidationError") {
-    return res.status(400).json({
-      message: "Validation Error",
-      error: err.message,
-    });
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <p className="text-gray-500">Loading your articles...</p>
+      </div>
+    );
   }
 
-  if (err.name === "CastError") {
-    return res.status(400).json({
-      message: "Cast Error",
-      error: err.message,
-    });
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+        {error}
+      </div>
+    );
   }
 
-  const errCode =
-    err.code ?? err.cause?.code ?? err.errorResponse?.code;
-
-  const keyValue =
-    err.keyValue ??
-    err.cause?.keyValue ??
-    err.errorResponse?.keyValue;
-
-  if (errCode === 11000) {
-    const field = Object.keys(keyValue)[0];
-    const value = keyValue[field];
-
-    return res.status(409).json({
-      message: `${field} "${value}" already exists`,
-    });
+  if (articles.length === 0) {
+    return (
+      <div className="text-center py-12 bg-gray-50 rounded-lg">
+        <p className="text-gray-500 mb-4">You haven't written any articles yet.</p>
+        <button
+          onClick={() => navigate("/author-profile/write-article")}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        >
+          Write Your First Article
+        </button>
+      </div>
+    );
   }
 
-  res.status(500).json({
-    message: "Server side error",
-  });
-});
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {articles.map((article) => (
+        <div
+          key={article._id}
+          className="bg-white border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+        >
+          {article.featuredImage && (
+            <img
+              src={article.featuredImage}
+              alt={article.title}
+              className="w-full h-48 object-cover"
+            />
+          )}
+          <div className="p-4">
+            <span className="text-xs text-blue-600 font-medium">
+              {article.category}
+            </span>
+            <h3 className="text-lg font-semibold text-gray-800 mt-1 mb-2">
+              {article.title}
+            </h3>
+            <p className="text-gray-600 text-sm mb-3">
+              {article.content?.slice(0, 100)}...
+            </p>
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-gray-400">
+                {new Date(article.createdAt).toLocaleDateString()}
+              </span>
+              <button
+                onClick={() => navigate(`/article/${article._id}`)}
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              >
+                Read More →
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default AuthorArticles;
