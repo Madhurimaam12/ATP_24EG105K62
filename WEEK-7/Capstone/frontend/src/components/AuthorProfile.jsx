@@ -8,7 +8,7 @@ function AuthorProfile() {
   const logout = useAuth((state) => state.logout);
   const navigate = useNavigate();
 
-  //call t6his function on logout
+  //call this function on logout
   const onLogout = async () => {
     //call login route
     await logout();
@@ -20,9 +20,7 @@ function AuthorProfile() {
     <div className={pageWrapper}>
       {/* PROFILE HEADER */}
       <div className="bg-white border border-[#e8e8ed] rounded-3xl p-6 mb-8 shadow-sm flex items-center justify-between">
-        {/* LEFT */}
         <div className="flex items-center gap-4">
-          {/* Avatar */}
           {currentUser?.profileImageUrl ? (
             <img
               src={currentUser.profileImageUrl}
