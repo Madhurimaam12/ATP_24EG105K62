@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import commonApi from "../api/axiosClient";
+import { commonApi } from "../api/axiosClient";
 
 function Home() {
   const [articles, setArticles] = useState([]);
@@ -11,7 +11,7 @@ function Home() {
     const fetchArticles = async () => {
       setLoading(true);
       try {
-        const res = await api.get("/public-articles");
+        const res = await commonApi.get("/public-articles");
         const allArticles = res.data.payload || [];
         setArticles(allArticles.slice(1));
         setFeaturedArticle(allArticles[0]);
@@ -94,10 +94,12 @@ function Home() {
                 <div className="flex items-center gap-4 pt-4">
                   <div className="flex items-center gap-2">
                     <div className="w-10 h-10 bg-linear-to-r from-indigo-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold">
-                      {featuredArticle.author?.name?.[0] || 'A'}
+                      {featuredArticle.author?.firstName?.[0] || featuredArticle.author?.name?.[0] || 'A'}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{featuredArticle.author?.name || 'Anonymous'}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {featuredArticle.author?.firstName || featuredArticle.author?.name || 'Anonymous'}
+                      </p>
                       <p className="text-xs text-gray-400">{new Date(featuredArticle.createdAt).toLocaleDateString()}</p>
                     </div>
                   </div>
