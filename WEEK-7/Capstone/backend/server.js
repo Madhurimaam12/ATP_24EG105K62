@@ -42,7 +42,7 @@ app.use(exp.json());
 app.use("/user-api", userApp);
 app.use("/author-api", authorApp);
 app.use("/admin-api", adminApp);
-app.use("/auth", commonApp);
+app.use("/api/common", commonApp);
 
 // Connect DB
 const connectDB = async () => {
