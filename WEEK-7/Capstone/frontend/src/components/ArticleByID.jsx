@@ -35,7 +35,7 @@ function ArticleByID() {
     const getArticle = async () => {
       setLoading(true);
       try {
-        const res = await api.get(`/user-api/article/${id}`);
+        const res = await api.get(`/api/common/article/${id}`);
         setArticle(res.data.payload);
       } catch (err) {
         setError(err.response?.data?.error || "Unable to load article.");
