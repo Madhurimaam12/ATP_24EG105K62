@@ -1,15 +1,19 @@
+// frontend/src/store/authStore.js
 import { create } from "zustand";
-import api from "../api/axiosClient";
+import { commonApi } from "../api/axiosClient";  
 
 export const useAuth = create((set) => ({
   currentUser: null,
   loading: false,
   isAuthenticated: false,
   error: null,
+  
   login: async (userCred) => {
     try {
       set({ loading: true, currentUser: null, isAuthenticated: false, error: null });
-      const res = await api.post("/auth/login", userCred);
+      
+      const res = await commonApi.post("/login", userCred);
+      
       if (res.status === 200) {
         set({
           currentUser: res.data?.payload,
@@ -23,13 +27,15 @@ export const useAuth = create((set) => ({
         loading: false,
         isAuthenticated: false,
         currentUser: null,
-        error: err.response?.data?.error || "Login failed",
+        error: err.response?.data?.message || "Login failed",
       });
     }
   },
+  
   logout: async () => {
     try {
-      const res = await api.get("/auth/logout");
+      const res = await commonApi.get("/logout");
+      
       if (res.status === 200) {
         set({
           currentUser: null,
@@ -43,14 +49,16 @@ export const useAuth = create((set) => ({
         loading: false,
         isAuthenticated: false,
         currentUser: null,
-        error: err.response?.data?.error || "Logout failed",
+        error: err.response?.data?.message || "Logout failed",
       });
     }
   },
+  
   checkAuth: async () => {
     try {
       set({ loading: true });
-      const res = await api.get("/auth/check-auth");
+      const res = await commonApi.get("/check-auth");
+      
       set({
         currentUser: res.data.payload,
         isAuthenticated: true,
