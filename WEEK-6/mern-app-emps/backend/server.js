@@ -18,8 +18,7 @@ app.use("/emp-api", empRoute);
 //DB connection
 const connectDB = async () => {
   try {
-    // Fixed connection string - added database name and proper format
-    await connect("mongodb+srv://madhurima:madhurima@cluster0.farh4i4.mongodb.net/?appName=Cluster0");
+    await connect("mongodb+srv://madhurima:madhurima@clusterO.farh4i4.mongodb.net/?appName=ClusterO");
     console.log("DB connected");
     app.listen(4000, () => console.log("server listening on port 4000.."));
   } catch (err) {
