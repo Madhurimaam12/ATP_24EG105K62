@@ -1,0 +1,72 @@
+### Read all users(req to protected route)
+GET http://localhost:8903/user-api/users
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxhYXN5YUBnbWFpbC5jb20iLCJpYXQiOjE3NzI4NzgwOTgsImV4cCI6MTc3Mjg3ODEwOH0.54EAH7ULfTX2rYsvks01POChhD3zoJKU3tnqHjEweII; Path=/; HttpOnly; SameSite=Lax
+### Read a user by ObjectId
+GET http://localhost:8903/user-api/users/69aa6480098f007d02bc71
+
+
+### Create new user
+POST http://localhost:8903/user-api/users
+Content-Type: application/json
+
+{
+    "username":"sreekar",
+    "password":"sreekar",
+    "email":"dwqdfvsad",
+    "age":18
+}
+
+### Update the existing user
+PUT http://localhost:8903/user-api/users/69aaa08ffba62e5ba39d8c36
+Content-Type: application/json
+
+{
+    "username":"laasya",
+    "password":"sreekar",
+    "email":"laasya@gmail.com",
+    "age":18
+}
+
+### user login
+POST http://localhost:8903/user-api/auth
+Content-Type: application/json
+
+{
+    "email":"laasya@gmail.com",
+    "password":"sreekar"
+}
+
+### Delete the existing user by Id
+DELETE http://localhost:8903/user-api/users/69aa8b07549ebaeb9f4166d4
+
+###
+GET http://localhost:8903/product-api/products
+
+###
+POST http://localhost:8903/product-api/products
+Content-Type: application/json
+
+{
+    "productId":1,
+    "productName":"Gold",
+    "price":20000,
+    "Brand":"PS"
+}
+
+
+###
+PUT http://localhost:8903/product-api/products/1
+Content-Type: application/json
+
+{
+    "productId":1,
+    "productName":"Silver",
+    "price":15000,
+    "Brand":"ps"
+}
+
+###
+GET http://localhost:8903/product-api/products/1
+
+###
+DELETE http://localhost:8903/product-api/products/1

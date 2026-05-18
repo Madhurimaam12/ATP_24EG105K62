@@ -1,0 +1,61 @@
+### Read all users
+GET http://localhost:8903/user-api/users
+
+### Read a user by id
+GET http://localhost:8903/user-api/users/1
+
+
+### Create new user
+POST http://localhost:8903/user-api/users
+Content-Type: application/json
+
+{
+    "id":1,
+    "name":"laasya",
+    "age":19
+}
+
+### Update the existing user
+PUT http://localhost:8903/user-api/users
+Content-Type: application/json
+
+{
+    "id":1,
+    "name":"sreekar",
+    "age":13
+}
+
+### Delete the existing user by Id
+DELETE http://localhost:8903/user-api/users/1
+
+###
+GET http://localhost:8903/product-api/product
+
+###
+POST http://localhost:8903/product-api/product
+Content-Type: application/json
+
+{
+    "productId":1,
+    "Name":"Gold",
+    "Brand":"Ps",
+    "Price":200000
+}
+
+
+###
+PUT http://localhost:8903/product-api/product
+Content-Type: application/json
+
+{
+    "productId":1,
+    "Name":"Silver",
+    "Brand":"ps",
+    "Price":90600
+}
+
+###
+GET http://localhost:8903/product-api/product/ps
+
+###
+DELETE http://localhost:8903/product-api/product/2
