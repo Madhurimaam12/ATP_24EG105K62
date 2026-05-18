@@ -1,24 +1,93 @@
-WEEK-1 : BASIC JAVA CONCEPTS
+JavaScript Array & Function Programs
 
-This folder contains JavaScript programs that help in learning the basic concepts of programming. Each file focuses on a specific task.
+This repository contains basic JavaScript programs created to practice important programming concepts like arrays, functions, loops, and conditional statements. These programs help in improving logical thinking and understanding core JavaScript fundamentals.
 
-BigOfTwoNum.js     : Finds which number is bigger between two numbers.
-BigOfThreeNum.js   : Finds the biggest number among three different numbers.
-SumOfMarks.js      : Adds up all the numbers in an array and shows the total sum.
-SmallestElement.js : Finds the smallest number in an array.
-FunctionBigNum.js  : A reusable function that takes three numbers and tells you which one is the biggest.
-FunctionSum.js     : A reusable function that takes a list of numbers and returns their total sum.
-FunctionSearch.js  : A reusable function that looks for a specific number in a list and tells you its position.
-Operations.js      : Shows how to manage a list of employees. It includes:
-                    Adding a new employee to the list.
-                    Removing an employee by their name.
-                    Changing specific details for an employee.
+Topics Covered
+Arrays
 
-The Concepts learned were:
-Variables             : Using let and const to store information like numbers and names.
-Conditions (If/Else)  : Making the computer choose between different options based on rules.
-Loops                 : Telling the computer to do the same task many times, like looking through every item in a list.
-Arrays                : Storing a group of items in a single place.
-Functions             : Writing a block of code once and using it many times with different inputs.
-Objects               : Storing detailed information about a single entity.
-Array Methods         : Using special built-in tools like splice, find, and findIndex to easily change or search through lists.
+An array is used to store multiple values in a single variable. Arrays help in organizing and managing data efficiently.
+
+Functions
+
+Functions are reusable blocks of code that perform a specific task. They help in reducing code repetition and improving readability.
+
+Loops
+
+Loops are used to execute a block of code repeatedly until a condition becomes false.
+
+Conditional Statements
+
+Conditional statements like if, else, and else if are used to make decisions based on conditions.
+
+Rest Parameters
+
+Rest parameters (...args) allow a function to accept multiple arguments as an array.
+
+Array Operations (splice)
+
+splice() is used to add, remove, or replace elements in an array.
+
+Searching and Summation Logic
+
+Searching logic is used to find specific elements in an array, while summation logic is used to calculate the total of numerical values.
+
+Programs Included
+1. Employee Array Object Operations
+
+Program to store and manipulate employee details using arrays and objects.
+
+2. Search Element in Array
+
+Program to search whether a particular element exists in an array.
+
+3. Sum of Array Elements Using Function
+
+Program to calculate the sum of all elements in an array using functions.
+
+4. Largest Among 3 Numbers Using Function
+
+Program to find the largest number among three numbers using a function.
+
+5. Largest of 2 Numbers
+
+Program to compare two numbers and display the greater number.
+
+6. Largest of 3 Numbers
+
+Program to find the maximum among three numbers using conditional statements.
+
+7. Sum Using Rest Parameters
+
+Program to calculate sum by accepting multiple inputs using rest parameters.
+
+8. Smallest Element in Array
+
+Program to find the minimum element present in an array.
+
+9. Sum of Marks in Array
+
+Program to calculate the total marks stored in an array.
+
+Technologies Used
+JavaScript
+Node.js
+How to Run the Programs
+Step 1:
+
+Install Node.js from:
+
+Node.js Official Website
+
+Step 2:
+
+Open terminal in the project folder.
+
+Step 3:
+
+Run the program using:
+
+node filename.js
+
+Example:
+
+node sumArray.js
