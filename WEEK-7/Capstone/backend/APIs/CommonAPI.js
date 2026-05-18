@@ -134,7 +134,7 @@ commonApp.get("/test-cloudinary", (req, res) => {
   });
 });
 
-// Login route
+// Login route - FIXED COOKIE SETTINGS
 commonApp.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -167,8 +167,9 @@ commonApp.post("/login", async (req, res) => {
 
     res.cookie("token", signedToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,      // Required for HTTPS (Render)
+      sameSite: "none",  // Required for cross-origin (Vercel to Render)
+      maxAge: 3600000,   // 1 hour expiry
     });
     
     let userObj = user.toObject();
@@ -185,12 +186,12 @@ commonApp.post("/login", async (req, res) => {
   }
 });
 
-// Logout route
+// Logout route - FIXED COOKIE CLEARING
 commonApp.get("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: true,      // Must match login cookie settings
+    sameSite: "none",  // Must match login cookie settings
   });
   res.status(200).json({ message: "Logout success" });
 });
