@@ -8,7 +8,7 @@ const commentSchema = new Schema({
   },
   comment: {
     type: String,
-    required:[true,"Enter a comment"],
+    required: [true, "Enter a comment"],
   },
 });
 
@@ -31,6 +31,14 @@ const articleSchema = new Schema(
       type: String,
       required: [true, "Content is required"],
     },
+    imageUrl: {          
+      type: String,
+      default: null,
+    },
+    tags: {             
+      type: [String],
+      default: [],
+    },
     comments: [{ type: commentSchema, default: [] }],
     isArticleActive: {
       type: Boolean,
@@ -40,9 +48,8 @@ const articleSchema = new Schema(
   {
     versionKey: false,
     timestamps: true,
-    strict: "throw",
+    strict: false,     
   },
 );
 
-//create article model
 export const ArticleModel = model("article", articleSchema);
