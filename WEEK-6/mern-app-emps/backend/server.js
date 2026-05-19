@@ -4,15 +4,17 @@ import { empRoute } from "./API/empApp.js";
 import cors from "cors";
 
 const app = exp();
-
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", 
+      "http://localhost:5173",
       "http://localhost:5174",
-      "https://mern-app-emps-qq2v17jea-madhurimaam12s-projects.vercel.app",
-      "https://mern-app-emps-k1ideeqbc-madhurimaam12s-projects.vercel.app"
+      "https://mern-app-emps.vercel.app",
+      "https://mern-app-emps-k1ideeqbc-madhurimaam12s-projects.vercel.app",
+      "https://mern-app-emps-qq2v17jea-madhurimaam12s-projects.vercel.app"
     ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
 
@@ -24,7 +26,7 @@ const connectDB = async () => {
     const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://madhurima:madhurima@clusterO.farh4i4.mongodb.net/?appName=ClusterO";
     await connect(MONGODB_URI);
     console.log("DB connected");
-
+    
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => console.log(`server listening on port ${PORT}..`));
   } catch (err) {
