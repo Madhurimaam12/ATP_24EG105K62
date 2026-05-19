@@ -23,7 +23,6 @@ const app = exp();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'http://localhost:5000',
   'https://atp-24-eg-105-k62.vercel.app',
   'https://atp-24-eg-105-k62-eight.vercel.app',
   'https://atp-24-eg-105-k62-k3o31f469-madhurimaam12s-projects.vercel.app'
@@ -33,7 +32,6 @@ app.use(
   cors({
     origin: function(origin, callback) {
       if (!origin) return callback(null, true);
-      
       if (allowedOrigins.indexOf(origin) === -1) {
         console.warn(`Blocked CORS request from: ${origin}`);
         return callback(null, false);
@@ -52,9 +50,9 @@ app.use(cookieParser());
 app.use(exp.json({ limit: '10mb' }));
 app.use(exp.urlencoded({ extended: true, limit: '10mb' }));
 
-// Request logging middleware
+// Request logging
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  console.log(`${req.method} ${req.url}`);
   next();
 });
 
@@ -64,11 +62,11 @@ app.use("/author-api", authorApp);
 app.use("/admin-api", adminApp);
 app.use("/api/common", commonApp);
 
-// Health check endpoint
+// Health check
 app.get("/health", (req, res) => {
-  res.status(200).json({
+  res.status(200).json({ 
     success: true,
-    status: "OK",
+    status: "OK", 
     message: "Server is running",
     timestamp: new Date().toISOString()
   });
@@ -76,13 +74,13 @@ app.get("/health", (req, res) => {
 
 // Test endpoint
 app.get("/test", (req, res) => {
-  res.status(200).json({
+  res.status(200).json({ 
     success: true,
-    message: "Test endpoint working!"
+    message: "Test endpoint working!" 
   });
 });
 
-// Database connection
+// Database connection 
 const connectDB = async () => {
   try {
     console.log("Connecting to MongoDB...");
@@ -93,20 +91,17 @@ const connectDB = async () => {
     app.listen(port, () => {
       console.log(`Server listening on port ${port}`);
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`Health check: http://localhost:${port}/health`);
     });
 
   } catch (err) {
     console.error("Database connection error:", err.message);
-    console.error("Make sure your DB_URL in .env is correct");
     process.exit(1);
   }
 };
 
-// Connect to database
 connectDB();
 
-// 404 handler - Keep this AFTER all routes
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -114,7 +109,7 @@ app.use((req, res) => {
   });
 });
 
-// Global error handling middleware
+// Error handler
 app.use((err, req, res, next) => {
   console.error("Error:", err);
 
@@ -122,14 +117,6 @@ app.use((err, req, res, next) => {
     return res.status(400).json({
       success: false,
       message: "Validation Error",
-      error: err.message,
-    });
-  }
-
-  if (err.name === "CastError") {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid ID format",
       error: err.message,
     });
   }
