@@ -24,7 +24,7 @@ const connectDB = async () => {
     const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://madhurima:madhurima@clusterO.farh4i4.mongodb.net/?appName=ClusterO";
     await connect(MONGODB_URI);
     console.log("DB connected");
-    
+
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => console.log(`server listening on port ${PORT}..`));
   } catch (err) {
