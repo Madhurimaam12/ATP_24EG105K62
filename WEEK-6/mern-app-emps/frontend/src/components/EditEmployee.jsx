@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router";
 import { useEffect } from "react";
+import { API_BASE_URL } from "../config";
 
 function EditEmployee() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
     setValue,
   } = useForm();
 
@@ -22,7 +22,7 @@ function EditEmployee() {
   }, []);
 
   const saveModifiedEmp = async (modifiedEmp) => {
-    const res = await fetch(`/emp-api/employees/${state._id}`, {  
+    const res = await fetch(`${API_BASE_URL}/emp-api/employees/${state._id}`, {  
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(modifiedEmp),
