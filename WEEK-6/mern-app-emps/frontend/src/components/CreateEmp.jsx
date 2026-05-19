@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { API_BASE_URL } from "../config";  
 
 function CreateEmp() {
   const [loading, setLoading] = useState(false);
@@ -17,8 +18,7 @@ function CreateEmp() {
   const onFormSubmit = async (newEmpObj) => {
     try {
       setLoading(true);
-      //make HTTP POST req
-      let res = await fetch("/api/employees", {
+      let res = await fetch(`${API_BASE_URL}/emp-api/employees`, {  =
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newEmpObj),
@@ -29,19 +29,15 @@ function CreateEmp() {
         navigate("/list");
       } else {
         let errorRes = await res.json();
-       // console.log("error responce is ", errorRes);
         throw new Error(errorRes.reason);
       }
     } catch (err) {
-     // console.log("err in catch", err);
       //deal with err
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
-
-  //console.log(error);
 
   if (loading) {
     return <p className="text-center text-4xl">Loading....</p>;
@@ -58,15 +54,18 @@ function CreateEmp() {
         <input
           type="text"
           placeholder="Enter name "
-          {...register("name")}
+          {...register("name", { required: "Name is required" })}
           className="mb-3 border-2 p-3 w-full rounded-2xl"
         />
+        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+        
         <input
           type="email"
           placeholder="Enter Email "
-          {...register("email")}
-          className="mb-3  border-2 p-3 w-full rounded-2xl"
+          {...register("email", { required: "Email is required" })}
+          className="mb-3 border-2 p-3 w-full rounded-2xl"
         />
+        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
 
         <input
           type="number"
@@ -74,18 +73,22 @@ function CreateEmp() {
           {...register("mobile")}
           className="mb-3 border-2 p-3 w-full rounded-2xl"
         />
+        
         <input
           type="text"
           placeholder="Enter designation"
-          {...register("designation")}
+          {...register("designation", { required: "Designation is required" })}
           className="mb-3 border-2 p-3 w-full rounded-2xl"
         />
+        {errors.designation && <p className="text-red-500">{errors.designation.message}</p>}
+        
         <input
           type="text"
           placeholder="Enter name of the company"
-          {...register("companyName")}
+          {...register("companyName", { required: "Company name is required" })}
           className="mb-3 border-2 p-3 w-full rounded-2xl"
         />
+        {errors.companyName && <p className="text-red-500">{errors.companyName.message}</p>}
 
         <button type="submit" className="text-2xl rounded-2xl bg-gray-600 text-white block mx-auto p-4">
           Add Emp
@@ -96,32 +99,3 @@ function CreateEmp() {
 }
 
 export default CreateEmp;
-
-
-/*
-
- GET
-   fetch(endpoint,{method:"GET"})
- POST
-    fetch(endpoint,{ method:"POST",
-                    headers:{"Content-Type":app/json}
-                    body:JSON.strigfy(resource)
-                    })
-
- PUT
-    fetch(endpoint,{ method:"PUT",
-                    headers:{"Content-Type":app/json}
-                    body:JSON.strigfy(resource)
-                    })
-*/
-
-/*
-
- GET
-   axios.get(endpoint)
- POST
-  axios.post(endpoint,resource)
- PUT
-  axios.put(endpoint,resource)
-
-*/
