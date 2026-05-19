@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { API_BASE_URL } from "../config";  
 
 function ListOfEmps() {
   const [emps, setEmps] = useState([]);
@@ -15,7 +16,7 @@ function ListOfEmps() {
 
   const deleteEmployee = async (empId) => {
     if (window.confirm("Are you sure you want to delete this employee?")) {
-      let res = await fetch(`/emp-api/employees/${empId}`, { 
+      let res = await fetch(`${API_BASE_URL}/emp-api/employees/${empId}`, { 
         method: "DELETE",
       });
       if (res.status === 200) {
@@ -26,7 +27,7 @@ function ListOfEmps() {
 
   useEffect(() => {
     async function getEmps() {
-      let res = await fetch("/emp-api/employees"); 
+      let res = await fetch(`${API_BASE_URL}/emp-api/employees`);  
       if (res.status === 200) {
         let resObj = await res.json();
         setEmps(resObj.payload);
